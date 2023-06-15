@@ -1,0 +1,3 @@
+[submodule "src/deps/juliaxmlwriter"]
+	path = src/deps/juliaxmlwriter
+	url = git@gitlab.com:ellifteria/juliaxmlwriter.git
