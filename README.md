@@ -1,6 +1,6 @@
-# JuliaRoXML
+# jRoClotho
 
-JuliaRoXML is a simple native Julia library for creating robot specification XML files.
+jRoClotho is a simple native Julia library for creating robot specification XML files.
 
 Currently, JuliaRoXML supports the following file types:
 
