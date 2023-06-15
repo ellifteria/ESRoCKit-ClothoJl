@@ -1,0 +1,4 @@
+name = "JuliaRoXML"
+uuid = "159b8a63-8e77-40d9-868e-d597ebb193bf"
+authors = ["Elli Beres <elliberes@proton.me>"]
+version = "0.1.0"
