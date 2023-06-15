@@ -1,7 +1,16 @@
 module URDFWriter
 
+# include XML writing tool
+
 include("../deps/juliaxmlwriter/src/XMLWriter.jl")
 using .XMLWriter
+
+# include URDF link and joint code
+
+include("./URDFLink.jl")
+include("./URDFJoint.jl")
+using .URDFLink
+using .URDFJoint
 
 # URDFWriter exported constants
 
@@ -16,11 +25,12 @@ end
 
 function urdfwriter_urdf_write(
     file_path::String,
-    xmlnode::XmlNode
+    urdf_doc::XmlNode
   )
 
-  xmlwriter_xmlnode_write(file_path, xmlnode)
+  xmlwriter_xmlnode_write(file_path, urdf_doc)
   
 end
 
 end
+
