@@ -7,8 +7,8 @@ using .XMLWriter
 
 # include URDF link and joint code
 
-include("./URDFLink.jl")
-include("./URDFJoint.jl")
+include("./_URDFLink.jl")
+include("./_URDFJoint.jl")
 using .URDFLink
 using .URDFJoint
 
