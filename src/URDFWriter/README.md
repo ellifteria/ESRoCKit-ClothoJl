@@ -7,7 +7,14 @@ Enables the creation of URDF robot specification files.
 ```julia
 urdf_doc = urdfwriter_urdffile_create()
 
-link_1 = urdfwriter_urdflink_create("link_1")
+visual_1 = urdfwriter_urdflink_create_visual(
+  nothing,
+  nothing,
+  urdfwriter_urdfgeom_create(URDFGeomBox(1.0, 1.0, 1.0)),
+  nothing
+)
+
+link_1 = urdfwriter_urdflink_create("link_1", visual_1)
 
 urdfwriter_urdffile_add_link!(urdf_doc, link_1)
 
@@ -18,7 +25,13 @@ urdfwriter_urdffile_write("./test.tst.urdf", urdf_doc)
 
 ```xml
 <robot name="robot">
-  <link_1/>
+  <link name="link_1">
+    <visual>
+      <geometry>
+        <box size="1.0 1.0 1.0"/>
+      </geometry>
+    </visual>
+  </link>
 </robot>
 ```
 
