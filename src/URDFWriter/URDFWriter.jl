@@ -5,13 +5,49 @@ module URDFWriter
 include("../deps/juliaxmlwriter/src/XMLWriter.jl")
 using .XMLWriter
 
-# URDFWriter: URDFLink exported functions
+# Internal types
+
+Optional{T} = Union{T, Nothing}
+
+# URDFWriter: URDFLink
+
+abstract type AbstractLinkGeometry end
+
+struct Box <: AbstractLinkGeometry
+  size_x::Float64
+  size_y::Float64
+  size_z::Float64
+end
+
+# URDFWriter: URDFLink: exported functions
 
 export urdfwriter_urdflink_create
 
-function urdfwriter_urdflink_create(name::String)::XmlNode
+function urdfwriter_urdflink_create_visual(
+    name::Optional{String}=nothing,
+    origin::Optional{XmlNode}=nothing,
+    # !! BELOW IS NOT OPTIONAL!!
+    geometry::Optional{XmlNode}=nothing, # !!NEEDS TO NOT BE NOTHING!!
+    # !!ABOVE IS NOT OPTIONAL!!
+    material::Optional{XmlNode}=nothing
+  )
 
-  return xmlwriter_xmlnode_create(name)
+  return
+
+end
+
+function urdfwriter_urdflink_create(
+    name::String,
+    visual::Optional{XmlNode}=nothing
+  )::XmlNode
+
+  link = xmlwriter_xmlnode_create(name)
+
+  if isnothing(visual) == false
+    xmlwriter_xmlnode_add_child!(link, visual)
+  end
+
+  return link
 
 end
 
@@ -26,20 +62,20 @@ function urdfwriter_urdfjoint_create(name::String)::XmlNode
 end
 
 
-# URDFWriter exported functions 
+# URDFWriter: URDFFile: exported functions 
 
-export urdfwriter_urdf_create,
-       urdfwriter_urdf_write,
-       urdfwriter_urdf_add_link!,
-       urdfwriter_urdf_add_joint!
+export urdfwriter_urdffile_create,
+       urdfwriter_urdffile_write,
+       urdfwriter_urdffile_add_link!,
+       urdfwriter_urdffile_add_joint!
 
-function urdfwriter_urdf_create(name::String="robot")::XmlNode
+function urdfwriter_urdffile_create(name::String="robot")::XmlNode
 
   return xmlwriter_xmlnode_create("robot", Dict("name" => "\"$(name)\""))
 
 end
 
-function urdfwriter_urdf_add_link!(
+function urdfwriter_urdffile_add_link!(
     urdf_doc::XmlNode,
     link::XmlNode
   )
@@ -48,7 +84,7 @@ function urdfwriter_urdf_add_link!(
 
 end
 
-function urdfwriter_urdf_add_joint!(
+function urdfwriter_urdffile_add_joint!(
     urdf_doc::XmlNode,
     joint::XmlNode
   )
@@ -57,7 +93,7 @@ function urdfwriter_urdf_add_joint!(
 
 end
 
-function urdfwriter_urdf_write(
+function urdfwriter_urdffile_write(
     file_path::String,
     urdf_doc::XmlNode
   )
