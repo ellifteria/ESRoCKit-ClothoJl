@@ -9,19 +9,55 @@ using .XMLWriter
 
 Optional{T} = Union{T, Nothing}
 
-# URDFWriter: URDFLink
+# URDFWriter: URDFGeom: types
 
-abstract type AbstractLinkGeometry end
+export AbstractURDFGeom,
+       URDFGeomBox
 
-struct Box <: AbstractLinkGeometry
+abstract type AbstractURDFGeom end
+
+struct URDFGeomBox <: AbstractURDFGeom
   size_x::Float64
   size_y::Float64
   size_z::Float64
 end
 
+# URDFWriter: URDFGeom: exported functions
+
+export urdfwriter_urdfgeom_create
+
+function urdfwriter_urdfgeom_create(
+    geometry::AbstractURDFGeom
+  )::XmlNode
+
+  xml_geom = xmlwriter_xmlnode_create("geometry")
+
+  geom_type::String = ""
+
+  if isa(geometry, URDFGeomBox)
+    geom_type = "box"
+  end
+
+  xml_geom_spec = xmlwriter_xmlnode_create(geom_type)
+
+  if isa(geometry, URDFGeomBox)
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "size",
+      "\"$(geometry.size_x) $(geometry.size_y) $(geometry.size_z)\""
+    )
+  end
+
+  xmlwriter_xmlnode_add_child!(xml_geom, xml_geom_spec)
+
+  return xml_geom
+  
+end
+
 # URDFWriter: URDFLink: exported functions
 
-export urdfwriter_urdflink_create
+export urdfwriter_urdflink_create,
+       urdfwriter_urdflink_create_visual
 
 function urdfwriter_urdflink_create_visual(
     name::Optional{String}=nothing,
@@ -30,9 +66,27 @@ function urdfwriter_urdflink_create_visual(
     geometry::Optional{XmlNode}=nothing, # !!NEEDS TO NOT BE NOTHING!!
     # !!ABOVE IS NOT OPTIONAL!!
     material::Optional{XmlNode}=nothing
-  )
+  )::XmlNode
 
-  return
+  xml_visual = xmlwriter_xmlnode_create("visual")
+
+  if isnothing(name) == false
+    xmlwriter_xmlnode_add_tag!(xml_visual, "name", name)
+  end
+
+  if isnothing(origin) == false
+    xmlwriter_xmlnode_add_child!(xml_visual, origin)
+  end
+
+  if isnothing(geometry) == false
+    xmlwriter_xmlnode_add_child!(xml_visual, geometry)
+  end
+
+  if isnothing(material) == false
+    xmlwriter_xmlnode_add_child(xml_visual, material)
+  end
+
+  return xml_visual
 
 end
 
@@ -41,7 +95,7 @@ function urdfwriter_urdflink_create(
     visual::Optional{XmlNode}=nothing
   )::XmlNode
 
-  link = xmlwriter_xmlnode_create(name)
+  link = xmlwriter_xmlnode_create("link", Dict("name" => "\"$(name)\""))
 
   if isnothing(visual) == false
     xmlwriter_xmlnode_add_child!(link, visual)
