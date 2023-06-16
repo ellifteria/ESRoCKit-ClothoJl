@@ -5,6 +5,9 @@ Enables the creation of URDF robot specification files.
 ## Usage
 
 ```julia
+include("~/.../URDFWriter.jl")
+using .URDFWriter
+
 urdf_doc = urdfwriter_urdffile_create()
 
 visual_1 = urdfwriter_urdflink_create_visual(
