@@ -2,7 +2,7 @@ module URDFWriter
 
 # include XML writing tool
 
-include("../deps/juliaxmlwriter/src/XMLWriter.jl")
+include("../../deps/juliaxmlwriter/src/XMLWriter.jl")
 using .XMLWriter
 
 # Internal types
