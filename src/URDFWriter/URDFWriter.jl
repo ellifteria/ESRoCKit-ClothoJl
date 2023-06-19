@@ -137,9 +137,36 @@ function urdfwriter_urdfgeom_create(
   
 end
 
-# URDFWriter: URDFVisualMaterial: exported types
-
 # URDFWriter: URDFVisualMaterial: exported functions
+
+export urdfwriter_urdfmaterial_create
+
+function urdfwriter_urdfgeom_create(
+    color::Optional{Vector{Float64}}=nothing,
+    texture_file_path::Optional{String}=nothing
+  )::XmlNode
+
+  xml_material = xmlwriter_xmlnode_create("material")
+
+  if isnothing(color) == false
+    xmlwriter_xmlnode_add_tag!(
+      xml_material,
+      "color",
+      "\"$(color[1]) $(color[2]) $(color[3])\""
+    )
+  end
+
+  if isnothing(texture_file_path) == false
+    xmlwriter_xmlnode_add_tag!(
+      xml_material,
+      "texture",
+      "\"$(texture_file_path)\""
+    )
+  end
+
+  return xml_material
+
+end
 
 # URDFWriter: URDFLink: exported functions
 
