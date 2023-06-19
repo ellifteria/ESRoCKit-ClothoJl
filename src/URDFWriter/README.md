@@ -11,10 +11,10 @@ using .URDFWriter
 urdf_doc = urdfwriter_urdffile_create()
 
 visual_1 = urdfwriter_urdflink_create_visual(
-  nothing,
-  nothing,
   urdfwriter_urdfgeom_create(URDFGeomBox(1.0, 1.0, 1.0)),
-  nothing
+  "visual",
+  urdfwriter_urdforigin_create([0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),
+  urdfwriter_urdfmaterial_create([1.0, 0.0, 0.0])
 )
 
 link_1 = urdfwriter_urdflink_create("link_1", visual_1)
@@ -29,10 +29,12 @@ urdfwriter_urdffile_write("~/.../output.urdf", urdf_doc)
 ```xml
 <robot name="robot">
   <link name="link_1">
-    <visual>
+    <visual name=visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
       <geometry>
         <box size="1.0 1.0 1.0"/>
       </geometry>
+      <material color="1.0 0.0 0.0"/>
     </visual>
   </link>
 </robot>

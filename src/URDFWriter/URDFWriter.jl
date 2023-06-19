@@ -13,7 +13,7 @@ Optional{T} = Union{T, Nothing}
 
 export urdfwriter_urdforigin_create
 
-function urdfwriter_urdfgeom_create(
+function urdfwriter_urdforigin_create(
     xyz::Optional{Vector{Float64}}=nothing,
     rpy::Optional{Vector{Float64}}=nothing
   )::XmlNode
@@ -23,8 +23,8 @@ function urdfwriter_urdfgeom_create(
   if isnothing(xyz) == false
     xmlwriter_xmlnode_add_tag!(
       xml_origin,
-      "rpy",
-      "\"$(rpy[1]) $(rpy[2]) $(rpy[3])\""
+      "xyz",
+      "\"$(xyz[1]) $(xyz[2]) $(xyz[3])\""
     )
   end
 
@@ -141,7 +141,7 @@ end
 
 export urdfwriter_urdfmaterial_create
 
-function urdfwriter_urdfgeom_create(
+function urdfwriter_urdfmaterial_create(
     color::Optional{Vector{Float64}}=nothing,
     texture_file_path::Optional{String}=nothing
   )::XmlNode
@@ -195,7 +195,7 @@ function urdfwriter_urdflink_create_visual(
   end
 
   if isnothing(material) == false
-    xmlwriter_xmlnode_add_child(xml_visual, material)
+    xmlwriter_xmlnode_add_child!(xml_visual, material)
   end
 
   return xml_visual
@@ -255,7 +255,7 @@ function urdfwriter_urdffile_add_joint!(
     joint::XmlNode
   )
 
-  xmlwriter_xmlnode_add_child(urdf_doc, joint)
+  xmlwriter_xmlnode_add_child!(urdf_doc, joint)
 
 end
 
