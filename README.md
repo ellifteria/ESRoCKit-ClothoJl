@@ -5,7 +5,7 @@ jRoClotho is a simple native Julia library for creating robot XML specification 
 jRoClotho supports the following file types:
 
 - [ ] URDF
-- [ ] MJCF
+<!-- - [ ] MJCF -->
 <!-- - [ ] SDF -->
 
 <!-- ## Installation -->
