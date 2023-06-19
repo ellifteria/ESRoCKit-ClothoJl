@@ -9,10 +9,44 @@ using .XMLWriter
 
 Optional{T} = Union{T, Nothing}
 
-# URDFWriter: URDFGeom: types
+# URDFWriter: URDFOrigin: exported functions
+
+export urdfwriter_urdforigin_create
+
+function urdfwriter_urdfgeom_create(
+    xyz::Optional{Vector{Float64}}=nothing,
+    rpy::Optional{Vector{Float64}}=nothing
+  )::XmlNode
+
+  xml_origin = xmlwriter_xmlnode_create("origin")
+
+  if isnothing(xyz) == false
+    xmlwriter_xmlnode_add_tag!(
+      xml_origin,
+      "rpy",
+      "\"$(rpy[1]) $(rpy[2]) $(rpy[3])\""
+    )
+  end
+
+  if isnothing(rpy) == false
+    xmlwriter_xmlnode_add_tag!(
+      xml_origin,
+      "rpy",
+      "\"$(rpy[1]) $(rpy[2]) $(rpy[3])\""
+    )
+  end
+
+  return xml_origin
+
+end
+
+# URDFWriter: URDFGeom: exported types
 
 export AbstractURDFGeom,
-       URDFGeomBox
+       URDFGeomBox,
+       URDFGeomCylinder,
+       URDFGeomSphere,
+       URDFGeomMesh
 
 abstract type AbstractURDFGeom end
 
@@ -103,17 +137,19 @@ function urdfwriter_urdfgeom_create(
   
 end
 
+# URDFWriter: URDFVisualMaterial: exported types
+
+# URDFWriter: URDFVisualMaterial: exported functions
+
 # URDFWriter: URDFLink: exported functions
 
 export urdfwriter_urdflink_create,
        urdfwriter_urdflink_create_visual
 
 function urdfwriter_urdflink_create_visual(
+    geometry::XmlNode,
     name::Optional{String}=nothing,
     origin::Optional{XmlNode}=nothing,
-    # !! BELOW IS NOT OPTIONAL!!
-    geometry::Optional{XmlNode}=nothing, # !!NEEDS TO NOT BE NOTHING!!
-    # !!ABOVE IS NOT OPTIONAL!!
     material::Optional{XmlNode}=nothing
   )::XmlNode
 
