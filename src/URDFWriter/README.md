@@ -29,7 +29,7 @@ urdfwriter_urdffile_write("~/.../output.urdf", urdf_doc)
 ```xml
 <robot name="robot">
   <link name="link_1">
-    <visual name=visual>
+    <visual name="visual">
       <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
       <geometry>
         <box size="1.0 1.0 1.0"/>

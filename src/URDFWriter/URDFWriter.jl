@@ -183,7 +183,7 @@ function urdfwriter_urdflink_create_visual(
   xml_visual = xmlwriter_xmlnode_create("visual")
 
   if isnothing(name) == false
-    xmlwriter_xmlnode_add_tag!(xml_visual, "name", name)
+    xmlwriter_xmlnode_add_tag!(xml_visual, "name", "\"$(name)\"")
   end
 
   if isnothing(origin) == false
