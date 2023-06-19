@@ -22,6 +22,22 @@ struct URDFGeomBox <: AbstractURDFGeom
   size_z::Float64
 end
 
+struct URDFGeomCylinder <: AbstractURDFGeom
+  radius::Float64
+  length::Float64
+end
+
+struct URDFGeomSphere <: AbstractURDFGeom
+  radius::Float64
+end
+
+struct URDFGeomMesh <: AbstractURDFGeom
+  file_path::String
+  scale_x::Float64
+  scale_y::Float64
+  scale_z::Float64
+end
+
 # URDFWriter: URDFGeom: exported functions
 
 export urdfwriter_urdfgeom_create
@@ -36,6 +52,12 @@ function urdfwriter_urdfgeom_create(
 
   if isa(geometry, URDFGeomBox)
     geom_type = "box"
+  elseif isa(geometry, URDFGeomCylinder)
+    geom_type = "cylinder"
+  elseif isa(geometry, URDFGeomSphere)
+    geom_type = "sphere"
+  elseif isa(geometry, URDFGeomMesh)
+    geom_type = "mesh"
   end
 
   xml_geom_spec = xmlwriter_xmlnode_create(geom_type)
@@ -46,8 +68,35 @@ function urdfwriter_urdfgeom_create(
       "size",
       "\"$(geometry.size_x) $(geometry.size_y) $(geometry.size_z)\""
     )
+  elseif isa(geometry, URDFGeomCylinder)
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "radius",
+      "\"$(geometry.radius)\""
+    )
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "length",
+      "\"$(geometry.length)"
+    )
+  elseif isa(geometry, URDFGeomSphere)
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "radius",
+      "\"$(geometry.radius)\""
+    )
+  elseif isa(geometry, URDFGeomMesh)
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "filename",
+      "\"$(geometry.file_path)\""
+    )
+    xmlwriter_xmlnode_add_tag!(
+      xml_geom_spec,
+      "scale",
+      "\"$(geometry.scale_x) $(geometry.scale_y) $(geometry.scale.z)\""
+    )
   end
-
   xmlwriter_xmlnode_add_child!(xml_geom, xml_geom_spec)
 
   return xml_geom
