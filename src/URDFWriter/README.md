@@ -69,4 +69,3 @@ urdfwriter_urdffile_write("~/.../output.urdf", urdf_doc)
   </link>
 </robot>
 ```
-

@@ -10,7 +10,7 @@ jRoClotho supports the following file types:
 
 <!-- ## Installation -->
 
-## Usage
+<!-- ## Usage -->
 
 <!-- -->
 
