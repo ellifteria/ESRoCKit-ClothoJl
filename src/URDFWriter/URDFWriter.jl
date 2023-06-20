@@ -9,13 +9,13 @@ using .XMLWriter
 
 Optional{T} = Union{T, Nothing}
 
-# URDFWriter: URDFOrigin: exported functions
+# URDFWriter: URDF Origin: exported functions
 
 export urdfwriter_urdforigin_create
 
 function urdfwriter_urdforigin_create(
-    xyz::Optional{Vector{Float64}}=nothing,
-    rpy::Optional{Vector{Float64}}=nothing
+    xyz::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
+    rpy::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing
   )::XmlNode
 
   xml_origin = xmlwriter_xmlnode_create("origin")
@@ -40,7 +40,7 @@ function urdfwriter_urdforigin_create(
 
 end
 
-# URDFWriter: URDFGeom: exported types
+# URDFWriter: URDF Geom: exported types
 
 export AbstractURDFGeom,
        URDFGeomBox,
@@ -51,28 +51,28 @@ export AbstractURDFGeom,
 abstract type AbstractURDFGeom end
 
 struct URDFGeomBox <: AbstractURDFGeom
-  size_x::Float64
-  size_y::Float64
-  size_z::Float64
+  size_x::Union{Int64, Float64}
+  size_y::Union{Int64, Float64}
+  size_z::Union{Int64, Float64}
 end
 
 struct URDFGeomCylinder <: AbstractURDFGeom
-  radius::Float64
-  length::Float64
+  radius::Union{Int64, Float64}
+  length::Union{Int64, Float64}
 end
 
 struct URDFGeomSphere <: AbstractURDFGeom
-  radius::Float64
+  radius::Union{Int64, Float64}
 end
 
 struct URDFGeomMesh <: AbstractURDFGeom
   file_path::String
-  scale_x::Float64
-  scale_y::Float64
-  scale_z::Float64
+  scale_x::Union{Int64, Float64}
+  scale_y::Union{Int64, Float64}
+  scale_z::Union{Int64, Float64}
 end
 
-# URDFWriter: URDFGeom: exported functions
+# URDFWriter: URDF Geom: exported functions
 
 export urdfwriter_urdfgeom_create
 
@@ -137,12 +137,12 @@ function urdfwriter_urdfgeom_create(
   
 end
 
-# URDFWriter: URDFVisualMaterial: exported functions
+# URDFWriter: URDF Visual Material: exported functions
 
 export urdfwriter_urdfmaterial_create
 
 function urdfwriter_urdfmaterial_create(
-    color::Optional{Vector{Float64}}=nothing,
+    color::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
     texture_file_path::Optional{String}=nothing
   )::XmlNode
 
@@ -168,13 +168,13 @@ function urdfwriter_urdfmaterial_create(
 
 end
 
-# URDFWriter: URDFInertia: exported functions
+# URDFWriter: URDF Inertial: exported functions
 
 export urdfwriter_urdfinterial_create
 
 function urdfwriter_urdfinterial_create(
-  mass::Optional{Float64}=nothing,
-  inertia::Optional{Vector{Float64}}=nothing,
+  mass::Optional{Union{Int64, Float64}}=nothing,
+  inertia::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
   origin::Optional{XmlNode}=nothing
 )
   xml_inertial = xmlwriter_xmlnode_create("inertial")
@@ -209,10 +209,36 @@ function urdfwriter_urdfinterial_create(
   return xml_inertial
 end
 
-# URDFWriter: URDFLink: exported functions
+# URDFWriter: URDF Collision: exported functions
 
-export urdfwriter_urdflink_create,
-       urdfwriter_urdflink_create_visual
+export urdfwriter_urdflink_create_collision
+
+function urdfwriter_urdflink_create_collision(
+    geometry::XmlNode,
+    name::Optional{String}=nothing,
+    origin::Optional{XmlNode}=nothing,
+  )::XmlNode
+
+  xml_collision = xmlwriter_xmlnode_create("collision")
+
+  if !isnothing(name)
+    xmlwriter_xmlnode_add_tag!(xml_collision, "name", "\"$(name)\"")
+  end
+
+  if !isnothing(origin)
+    xmlwriter_xmlnode_add_child!(xml_collision, origin)
+  end
+
+  if !isnothing(geometry)
+    xmlwriter_xmlnode_add_child!(xml_collision, geometry)
+  end
+
+  return xml_collision
+
+end
+# URDFWriter: URDF Visual: exported functions
+
+export urdfwriter_urdflink_create_visual
 
 function urdfwriter_urdflink_create_visual(
     geometry::XmlNode,
@@ -243,15 +269,29 @@ function urdfwriter_urdflink_create_visual(
 
 end
 
+# URDFWriter: URDF Link: exported functions
+
+export urdfwriter_urdflink_create
+
 function urdfwriter_urdflink_create(
     name::String,
-    visual::Optional{XmlNode}=nothing
+    inertial::Optional{XmlNode}=nothing,
+    visual::Optional{XmlNode}=nothing,
+    collision::Optional{XmlNode}=nothing,
   )::XmlNode
 
   link = xmlwriter_xmlnode_create("link", Dict("name" => "\"$(name)\""))
 
+  if !isnothing(inertial)
+    xmlwriter_xmlnode_add_child!(link, inertial)
+  end
+
   if !isnothing(visual)
     xmlwriter_xmlnode_add_child!(link, visual)
+  end
+
+  if !isnothing(collision)
+    xmlwriter_xmlnode_add_child!(link, collision)
   end
 
   return link
