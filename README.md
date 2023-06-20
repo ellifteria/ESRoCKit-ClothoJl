@@ -1,8 +1,14 @@
-# jRoClotho
+# SimRoKit-jl
 
-jRoClotho is a simple native Julia library for creating robot XML specification files.
+---
 
-jRoClotho supports the following file types:
+Simulated Robotics Tookit&mdash;julia
+
+---
+
+SimRoKit is a simple native Julia library for creating robot XML specification files.
+
+SimRoKit supports the following file types:
 
 - [ ] URDF
 <!-- - [ ] MJCF -->
