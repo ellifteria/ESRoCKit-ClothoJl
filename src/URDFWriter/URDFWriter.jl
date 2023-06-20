@@ -20,7 +20,7 @@ function urdfwriter_urdforigin_create(
 
   xml_origin = xmlwriter_xmlnode_create("origin")
 
-  if isnothing(xyz) == false
+  if !isnothing(xyz)
     xmlwriter_xmlnode_add_tag!(
       xml_origin,
       "xyz",
@@ -28,7 +28,7 @@ function urdfwriter_urdforigin_create(
     )
   end
 
-  if isnothing(rpy) == false
+  if !isnothing(rpy)
     xmlwriter_xmlnode_add_tag!(
       xml_origin,
       "rpy",
@@ -148,7 +148,7 @@ function urdfwriter_urdfmaterial_create(
 
   xml_material = xmlwriter_xmlnode_create("material")
 
-  if isnothing(color) == false
+  if !isnothing(color)
     xmlwriter_xmlnode_add_child!(
       xml_material,
       "color",
@@ -156,7 +156,7 @@ function urdfwriter_urdfmaterial_create(
     )
   end
 
-  if isnothing(texture_file_path) == false
+  if !isnothing(texture_file_path)
     xmlwriter_xmlnode_add_tag!(
       xml_material,
       "texture",
@@ -166,6 +166,47 @@ function urdfwriter_urdfmaterial_create(
 
   return xml_material
 
+end
+
+# URDFWriter: URDFInertia: exported functions
+
+export urdfwriter_urdfinterial_create
+
+function urdfwriter_urdfinterial_create(
+  mass::Optional{Float64}=nothing,
+  inertia::Optional{Vector{Float64}}=nothing,
+  origin::Optional{XmlNode}=nothing
+)
+  xml_inertial = xmlwriter_xmlnode_create("inertial")
+
+  if !isnothing(mass)
+    xmlwriter_xmlnode_add_child!(
+      xml_inertial,
+      "mass",
+      Dict("value" => "\"$(mass)\"")
+    )
+  end
+
+  if !isnothing(inertia)
+    xmlwriter_xmlnode_add_child!(
+      xml_inertial,
+      "inertia",
+      Dict(
+        "ixx" => "\"$(inertia[1])\"",
+        "ixy" => "\"$(inertia[2])\"",
+        "ixz" => "\"$(inertia[3])\"",
+        "iyy" => "\"$(inertia[4])\"",
+        "iyz" => "\"$(inertia[5])\"",
+        "izz" => "\"$(inertia[6])\"",
+      )
+    )
+  end
+
+  if !isnothing(origin)
+    xmlwriter_xmlnode_add_child!(xml_inertial, origin)
+  end
+
+  return xml_inertial
 end
 
 # URDFWriter: URDFLink: exported functions
@@ -182,19 +223,19 @@ function urdfwriter_urdflink_create_visual(
 
   xml_visual = xmlwriter_xmlnode_create("visual")
 
-  if isnothing(name) == false
+  if !isnothing(name)
     xmlwriter_xmlnode_add_tag!(xml_visual, "name", "\"$(name)\"")
   end
 
-  if isnothing(origin) == false
+  if !isnothing(origin)
     xmlwriter_xmlnode_add_child!(xml_visual, origin)
   end
 
-  if isnothing(geometry) == false
+  if !isnothing(geometry)
     xmlwriter_xmlnode_add_child!(xml_visual, geometry)
   end
 
-  if isnothing(material) == false
+  if !isnothing(material)
     xmlwriter_xmlnode_add_child!(xml_visual, material)
   end
 
@@ -209,7 +250,7 @@ function urdfwriter_urdflink_create(
 
   link = xmlwriter_xmlnode_create("link", Dict("name" => "\"$(name)\""))
 
-  if isnothing(visual) == false
+  if !isnothing(visual)
     xmlwriter_xmlnode_add_child!(link, visual)
   end
 
