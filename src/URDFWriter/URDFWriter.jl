@@ -149,10 +149,10 @@ function urdfwriter_urdfmaterial_create(
   xml_material = xmlwriter_xmlnode_create("material")
 
   if isnothing(color) == false
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_add_child!(
       xml_material,
       "color",
-      "\"$(color[1]) $(color[2]) $(color[3])\""
+      Dict("rgba" => "\"$(color[1]) $(color[2]) $(color[3])\"")
     )
   end
 
