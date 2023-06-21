@@ -1,4 +1,4 @@
-module simrokit
+module SimRoKit
 
 greet() = print("Hello World!")
 
