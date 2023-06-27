@@ -9,6 +9,12 @@ using .XMLWriter
 
 Optional{T} = Union{T, Nothing}
 
+# Internal warning messages
+
+const UNCHECKMSG = "SimRoKit.jl does NOT check if"
+const SAFETYCONTROLLERMSG = "($UNCHECKMSG) the provided safety controller uses valid limits"
+const JOINTMIMICMSG = "$(UNCHECKMSG) the provided mimic follows a valid joint"
+
 # URDFWriter: URDF Origin: exported functions
 
 export urdfwriter_urdforigin_create
@@ -298,13 +304,302 @@ function urdfwriter_urdflink_create(
 
 end
 
+# URDFWriter: URDF Axis: exported functions
+
+export urdfwriter_urdfaxis_create
+
+function urdfwriter_urdfaxis_create(
+    xyz::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
+  )::XmlNode
+
+  xml_axis= xmlwriter_xmlnode_create("axis")
+
+  if !isnothing(xyz)
+    xmlwriter_xmlnode_add_tag!(
+      xml_axis,
+      "xyz",
+      "\"$(xyz[1]) $(xyz[2]) $(xyz[3])\""
+    )
+  end
+
+  return xml_axis
+
+end
+
+# URDFWriter: URDF Callibration: exported functions
+
+export urdfwriter_urdfcallibration_create
+
+function urdfwriter_urdfcallibration_create(
+    rising::Optional{Union{Int64, Float64}}=nothing,
+    falling::Optional{Union{Int64, Float64}}=nothing
+  )::XmlNode
+
+  xml_callibration = xmlwriter_xmlnode_create("callibration")
+
+  if !isnothing(rising)
+    xmlwriter_xmlnode_add_tag!(
+      xml_callibration,
+      "rising",
+      "\"$(rising)\""
+    )
+  end
+
+  if !isnothing(falling)
+    xmlwriter_xmlnode_add_tag!(
+      xml_callibration,
+      "falling",
+      "\"$(falling)\""
+    )
+  end
+
+  return xml_callibration 
+
+end
+
+# URDFWriter: URDF Dynamics: exported functions
+
+export urdfwriter_urdfdynamics_create
+
+function urdfwriter_urdfdynamics_create(
+    damping::Optional{Union{Int64, Float64}}=nothing,
+    friction::Optional{Union{Int64, Float64}}=nothing
+  )::XmlNode
+
+  xml_dynamics = xmlwriter_xmlnode_create("dynamics")
+
+  if !isnothing(damping)
+    xmlwriter_xmlnode_add_tag!(
+      xml_dynamics,
+      "dynamics",
+      "\"$(dynamics)\""
+    )
+  end
+
+  if !isnothing(friction)
+    xmlwriter_xmlnode_add_tag!(
+      xml_dynamics,
+      "friction",
+      "\"$(friction)\""
+    )
+  end
+
+  return xml_dynamics
+
+end
+
+# URDFWriter: URDF Limit: exported functions
+
+export urdfwriter_urdflimit_create
+
+function urdfwriter_urdflimit_create(
+    velocity::Union{Int64, Float64},
+    effort::Union{Int64, Float64},
+    lower::Optional{Union{Int64, Float64}}=nothing,
+    upper::Optional{Union{Int64, Float64}}=nothing  
+  )::XmlNode
+
+  xml_limit = xmlwriter_xmlnode_create("limit")
+
+  xmlwriter_xmlnode_add_tag!(
+    xml_limit,
+    "velocity",
+    "\"$(velocity)\""
+  )
+  
+  xmlwriter_xmlnode_add_tag!(
+    xml_limit,
+    "effort",
+    "\"$(effort)\""
+  )
+
+  if !isnothing(lower)
+    xmlwriter_xmlnode_add_tag!(
+      xml_limit,
+      "lower",
+      "\"$(lower)\""
+    )
+  end
+
+  if !isnothing(upper)
+    xmlwriter_xmlnode_add_tag!(
+      xml_limit,
+      "upper",
+      "\"$(upper)\""
+    )
+  end
+
+  return xml_limit
+
+end
+
+# URDFWriter: URDF Mimic: exported functions
+
+export urdfwriter_urdfmimic_create
+
+function urdfwriter_urdfmimic_create(
+    joint::String,
+    multiplier::Optional{Union{Int64, Float64}}=nothing,
+    offset::Optional{Union{Int64, Float64}}=nothing,
+  )::XmlNode
+
+  @warn "Creating joint mimic; $(JOINTMIMICMSG)"
+
+  xml_mimic = xmlwriter_xmlnode_create("mimic")
+    
+  xmlwriter_xmlnode_add_tag!(
+    xml_mimic,
+    "joint",
+    "\"$(joint)\""
+  )
+
+  if !isnothing(multiplier)
+    xmlwriter_xmlnode_add_tag!(
+      xml_mimic,
+      "multiplier",
+      "\"$(multiplier)\""
+    )
+  end
+
+  if !isnothing(offset)
+    xmlwriter_xmlnode_add_tag!(
+      xml_mimic,
+      "offset",
+      "\"$(offset)\""
+    )
+  end
+
+  return xml_mimic
+
+end
+
+# URDFWriter: URDF Safety Controller: exported functions
+
+export urdfwriter_urdfsafetycontroller_create
+
+function urdfwriter_urdfsafetycontroller_create(
+    k_velocity::Union{Int64, Float64},
+    k_position::Optional{Union{Int64, Float64}}=nothing,
+    soft_lower_limit::Optional{Union{Int64, Float64}}=nothing,
+    soft_upper_limit::Optional{Union{Int64, Float64}}=nothing,
+  )::XmlNode
+
+  @warn "Creating safety controller; $(SAFETYCONTROLLERMSG)"
+
+  xml_safety_controller = xmlwriter_xmlnode_create("safety_controller")
+
+  xmlwriter_xmlnode_add_tag!(
+    xml_safety_controller,
+    "k_velocity",
+    "\"$(k_velocity)\""
+  )
+  
+  if !isnothing(k_position)
+    xmlwriter_xmlnode_add_tag!(
+      xml_safety_controller,
+      "k_position",
+      "\"$(k_position)\""
+    )
+  end
+
+  if !isnothing(soft_lower_limit)
+    xmlwriter_xmlnode_add_tag!(
+      xml_safety_controller,
+      "soft_lower_limit",
+      "\"$(soft_lower_limit)\""
+    )
+  end
+
+  if !isnothing(soft_upper_limit)
+    xmlwriter_xmlnode_add_tag!(
+      xml_safety_controller,
+      "soft_upper_limit",
+      "\"$(soft_upper_limit)\""
+    )
+  end
+
+  return xml_safety_controller
+
+end
+
 # URDFWriter: URDFJoint: exported functions
 
 export urdfwriter_urdfjoint_create
 
-function urdfwriter_urdfjoint_create(name::String)::XmlNode
+@enum URDFJointType begin
+  revolute
+  continuous
+  prismatic
+  fixed
+  floating
+  planar
+end
 
-  return xmlwriter_xmlnode_create(name)
+function urdfwriter_urdfjoint_create(
+    name::String,
+    type::URDFJointType,
+    parent::String,
+    child::String,
+    limit::Optional{XmlNode}=nothing,
+    origin::Optional{XmlNode}=nothing,
+    axis::Optional{XmlNode}=nothing,
+    callibration::Optional{XmlNode}=nothing,
+    dynamics::Optional{XmlNode}=nothing,
+    mimic::Optional{XmlNode}=nothing,
+    safety_controller::Optional{XmlNode}=nothing
+  )::XmlNode
+
+  if (type == revolute || type == prismatic) && isnothing(limit)
+    throw(ArgumentError("limit must be provided and not nothing for joint type: $(String(Symbol(type)))"))
+  end
+
+  joint_node::XmlNode = xmlwriter_xmlnode_create(joint)
+
+  xmlwriter_xmlnode_add_tag!(joint_node, "name", "\"$(name)\"")
+  xmlwriter_xmlnode_add_tag!(joint_node, "type", "\"$(String(Symbol(type)))\"")
+
+  xmlwriter_xmlnode_add_child!(
+    joint_node,
+    "parent",
+    Dict("link" => "\"$(parent)\"")
+  )
+  xmlwriter_xmlnode_add_child!(
+    joint_node,
+    "child",
+    Dict("link" => "\"$(child)\"")
+  )
+  
+  if !isnothing(origin)
+    xmlwriter_xmlnode_add_child!(joint_node, origin)
+  end
+
+  if !isnothing(axis)
+    xmlwriter_xmlnode_add_child!(joint_node, axis)
+  end
+
+  if !isnothing(callibration)
+    xmlwriter_xmlnode_add_child!(joint_node, callibration)
+  end
+
+  if !isnothing(dynamics)
+    xmlwriter_xmlnode_add_child!(joint_node, dynamics)
+  end
+
+  if !isnothing(limit)
+    xmlwriter_xmlnode_add_child!(joint_node, limit)
+  end
+
+  if !isnothing(mimic)
+    @warn "Joint $(name) mimics another joint; $(JOINTMIMICMSG)"
+    xmlwriter_xmlnode_add_child!(joint_node, mimic)
+  end
+
+  if !isnothing(safety_controller)
+    @warn "Joint $(name) uses a safety controller; $(SAFETYCONTROLLERMSG)"
+    xmlwriter_xmlnode_add_child!(joint_node, safety_controller)
+  end
+  
+  return joint_node
 
 end
 

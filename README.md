@@ -19,8 +19,8 @@ Simulated robot bodies:
 Simulates robot brains:
 
 - [ ] ENNF
-    - [ ] ENNF1
-    - [ ] ENNF2
+  - [ ] ENNF1
+  - [ ] ENNF2
 
 <!-- ## Installation -->
 
