@@ -151,10 +151,19 @@ export urdfwriter_urdfmaterial_create
 
 function urdfwriter_urdfmaterial_create(
     color::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
+    name::Optional{String}=nothing,
     texture_file_path::Optional{String}=nothing
   )::XmlNode
 
   xml_material = xmlwriter_xmlnode_create("material")
+
+  if !isnothing(name)
+    xmlwriter_xmlnode_add_tag!(
+      xml_material,
+      "name",
+      "\"$(name)\""
+    )
+  end
 
   if !isnothing(color)
     xmlwriter_xmlnode_add_child!(
