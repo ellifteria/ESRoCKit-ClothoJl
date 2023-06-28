@@ -169,7 +169,7 @@ function urdfwriter_material_create(
     xmlwriter_xmlnode_addchild!(
       xml_material,
       "color",
-      Dict("rgba" => "\"$(color[1]) $(color[2]) $(color[3])\"")
+      Dict("rgba" => "\"$(color[1]) $(color[2]) $(color[3]) $(color[4])\"")
     )
   end
 
