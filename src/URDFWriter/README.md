@@ -8,7 +8,7 @@ Enables the creation of URDF robot specification files.
 include("~/.../URDFWriter.jl")
 using .URDFWriter
 
-urdf_doc = urdfwriter_urdffile_create()
+urdf_doc = urdfwriter_urdf_create()
 
 visual_1 = urdfwriter_urdflink_create_visual(
   urdfwriter_urdfgeom_create(URDFGeomBox(1.0, 1.0, 1.0)),
@@ -36,9 +36,9 @@ link_1 = urdfwriter_urdflink_create(
   collision_1
 )
 
-urdfwriter_urdffile_add_link!(urdf_doc, link_1)
+urdfwriter_urdf_addlink!(urdf_doc, link_1)
 
-urdfwriter_urdffile_write("~/.../output.urdf", urdf_doc)
+urdfwriter_urdf_write("~/.../output.urdf", urdf_doc)
 ```
 
 ### Output

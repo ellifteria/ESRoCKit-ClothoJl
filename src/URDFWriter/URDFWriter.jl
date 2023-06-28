@@ -19,9 +19,9 @@ const JOINTMIMICMSG = "$(UNCHECKMSG) the provided mimic follows a valid joint"
 
 # URDFWriter: URDF Origin: exported functions
 
-export urdfwriter_urdforigin_create
+export urdfwriter_origin_create
 
-function urdfwriter_urdforigin_create(
+function urdfwriter_origin_create(
     xyz::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
     rpy::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing
   )::XmlNode
@@ -29,7 +29,7 @@ function urdfwriter_urdforigin_create(
   xml_origin = xmlwriter_xmlnode_create("origin")
 
   if !isnothing(xyz)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_origin,
       "xyz",
       "\"$(xyz[1]) $(xyz[2]) $(xyz[3])\""
@@ -37,7 +37,7 @@ function urdfwriter_urdforigin_create(
   end
 
   if !isnothing(rpy)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_origin,
       "rpy",
       "\"$(rpy[1]) $(rpy[2]) $(rpy[3])\""
@@ -82,9 +82,9 @@ end
 
 # URDFWriter: URDF Geom: exported functions
 
-export urdfwriter_urdfgeom_create
+export urdfwriter_geom_create
 
-function urdfwriter_urdfgeom_create(
+function urdfwriter_geom_create(
     geometry::AbstractURDFGeom
   )::XmlNode
 
@@ -105,41 +105,41 @@ function urdfwriter_urdfgeom_create(
   xml_geom_spec = xmlwriter_xmlnode_create(geom_type)
 
   if isa(geometry, URDFGeomBox)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "size",
       "\"$(geometry.size_x) $(geometry.size_y) $(geometry.size_z)\""
     )
   elseif isa(geometry, URDFGeomCylinder)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "radius",
       "\"$(geometry.radius)\""
     )
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "length",
       "\"$(geometry.length)"
     )
   elseif isa(geometry, URDFGeomSphere)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "radius",
       "\"$(geometry.radius)\""
     )
   elseif isa(geometry, URDFGeomMesh)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "filename",
       "\"$(geometry.file_path)\""
     )
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_geom_spec,
       "scale",
       "\"$(geometry.scale_x) $(geometry.scale_y) $(geometry.scale.z)\""
     )
   end
-  xmlwriter_xmlnode_add_child!(xml_geom, xml_geom_spec)
+  xmlwriter_xmlnode_addchild!(xml_geom, xml_geom_spec)
 
   return xml_geom
   
@@ -147,9 +147,9 @@ end
 
 # URDFWriter: URDF Visual Material: exported functions
 
-export urdfwriter_urdfmaterial_create
+export urdfwriter_material_create
 
-function urdfwriter_urdfmaterial_create(
+function urdfwriter_material_create(
     color::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
     name::Optional{String}=nothing,
     texture_file_path::Optional{String}=nothing
@@ -158,7 +158,7 @@ function urdfwriter_urdfmaterial_create(
   xml_material = xmlwriter_xmlnode_create("material")
 
   if !isnothing(name)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_material,
       "name",
       "\"$(name)\""
@@ -166,7 +166,7 @@ function urdfwriter_urdfmaterial_create(
   end
 
   if !isnothing(color)
-    xmlwriter_xmlnode_add_child!(
+    xmlwriter_xmlnode_addchild!(
       xml_material,
       "color",
       Dict("rgba" => "\"$(color[1]) $(color[2]) $(color[3])\"")
@@ -174,7 +174,7 @@ function urdfwriter_urdfmaterial_create(
   end
 
   if !isnothing(texture_file_path)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_material,
       "texture",
       "\"$(texture_file_path)\""
@@ -187,9 +187,9 @@ end
 
 # URDFWriter: URDF Inertial: exported functions
 
-export urdfwriter_urdfinterial_create
+export urdfwriter_interial_create
 
-function urdfwriter_urdfinterial_create(
+function urdfwriter_interial_create(
   mass::Optional{Union{Int64, Float64}}=nothing,
   inertia::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
   origin::Optional{XmlNode}=nothing
@@ -197,7 +197,7 @@ function urdfwriter_urdfinterial_create(
   xml_inertial = xmlwriter_xmlnode_create("inertial")
 
   if !isnothing(mass)
-    xmlwriter_xmlnode_add_child!(
+    xmlwriter_xmlnode_addchild!(
       xml_inertial,
       "mass",
       Dict("value" => "\"$(mass)\"")
@@ -205,7 +205,7 @@ function urdfwriter_urdfinterial_create(
   end
 
   if !isnothing(inertia)
-    xmlwriter_xmlnode_add_child!(
+    xmlwriter_xmlnode_addchild!(
       xml_inertial,
       "inertia",
       Dict(
@@ -220,7 +220,7 @@ function urdfwriter_urdfinterial_create(
   end
 
   if !isnothing(origin)
-    xmlwriter_xmlnode_add_child!(xml_inertial, origin)
+    xmlwriter_xmlnode_addchild!(xml_inertial, origin)
   end
 
   return xml_inertial
@@ -228,9 +228,9 @@ end
 
 # URDFWriter: URDF Collision: exported functions
 
-export urdfwriter_urdflink_create_collision
+export urdfwriter_collision_create
 
-function urdfwriter_urdflink_create_collision(
+function urdfwriter_collision_create(
     geometry::XmlNode,
     name::Optional{String}=nothing,
     origin::Optional{XmlNode}=nothing,
@@ -239,15 +239,15 @@ function urdfwriter_urdflink_create_collision(
   xml_collision = xmlwriter_xmlnode_create("collision")
 
   if !isnothing(name)
-    xmlwriter_xmlnode_add_tag!(xml_collision, "name", "\"$(name)\"")
+    xmlwriter_xmlnode_addtag!(xml_collision, "name", "\"$(name)\"")
   end
 
   if !isnothing(origin)
-    xmlwriter_xmlnode_add_child!(xml_collision, origin)
+    xmlwriter_xmlnode_addchild!(xml_collision, origin)
   end
 
   if !isnothing(geometry)
-    xmlwriter_xmlnode_add_child!(xml_collision, geometry)
+    xmlwriter_xmlnode_addchild!(xml_collision, geometry)
   end
 
   return xml_collision
@@ -255,9 +255,9 @@ function urdfwriter_urdflink_create_collision(
 end
 # URDFWriter: URDF Visual: exported functions
 
-export urdfwriter_urdflink_create_visual
+export urdfwriter_visual_create
 
-function urdfwriter_urdflink_create_visual(
+function urdfwriter_visual_create(
     geometry::XmlNode,
     name::Optional{String}=nothing,
     origin::Optional{XmlNode}=nothing,
@@ -267,19 +267,19 @@ function urdfwriter_urdflink_create_visual(
   xml_visual = xmlwriter_xmlnode_create("visual")
 
   if !isnothing(name)
-    xmlwriter_xmlnode_add_tag!(xml_visual, "name", "\"$(name)\"")
+    xmlwriter_xmlnode_addtag!(xml_visual, "name", "\"$(name)\"")
   end
 
   if !isnothing(origin)
-    xmlwriter_xmlnode_add_child!(xml_visual, origin)
+    xmlwriter_xmlnode_addchild!(xml_visual, origin)
   end
 
   if !isnothing(geometry)
-    xmlwriter_xmlnode_add_child!(xml_visual, geometry)
+    xmlwriter_xmlnode_addchild!(xml_visual, geometry)
   end
 
   if !isnothing(material)
-    xmlwriter_xmlnode_add_child!(xml_visual, material)
+    xmlwriter_xmlnode_addchild!(xml_visual, material)
   end
 
   return xml_visual
@@ -288,9 +288,9 @@ end
 
 # URDFWriter: URDF Link: exported functions
 
-export urdfwriter_urdflink_create
+export urdfwriter_link_create
 
-function urdfwriter_urdflink_create(
+function urdfwriter_link_create(
     name::String,
     inertial::Optional{XmlNode}=nothing,
     visual::Optional{XmlNode}=nothing,
@@ -300,15 +300,15 @@ function urdfwriter_urdflink_create(
   link = xmlwriter_xmlnode_create("link", Dict("name" => "\"$(name)\""))
 
   if !isnothing(inertial)
-    xmlwriter_xmlnode_add_child!(link, inertial)
+    xmlwriter_xmlnode_addchild!(link, inertial)
   end
 
   if !isnothing(visual)
-    xmlwriter_xmlnode_add_child!(link, visual)
+    xmlwriter_xmlnode_addchild!(link, visual)
   end
 
   if !isnothing(collision)
-    xmlwriter_xmlnode_add_child!(link, collision)
+    xmlwriter_xmlnode_addchild!(link, collision)
   end
 
   return link
@@ -317,16 +317,16 @@ end
 
 # URDFWriter: URDF Axis: exported functions
 
-export urdfwriter_urdfaxis_create
+export urdfwriter_axis_create
 
-function urdfwriter_urdfaxis_create(
+function urdfwriter_axis_create(
     xyz::Optional{Union{Vector{Int64}, Vector{Float64}}}=nothing,
   )::XmlNode
 
   xml_axis= xmlwriter_xmlnode_create("axis")
 
   if !isnothing(xyz)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_axis,
       "xyz",
       "\"$(xyz[1]) $(xyz[2]) $(xyz[3])\""
@@ -339,9 +339,9 @@ end
 
 # URDFWriter: URDF Callibration: exported functions
 
-export urdfwriter_urdfcallibration_create
+export urdfwriter_callibration_create
 
-function urdfwriter_urdfcallibration_create(
+function urdfwriter_callibration_create(
     rising::Optional{Union{Int64, Float64}}=nothing,
     falling::Optional{Union{Int64, Float64}}=nothing
   )::XmlNode
@@ -349,7 +349,7 @@ function urdfwriter_urdfcallibration_create(
   xml_callibration = xmlwriter_xmlnode_create("callibration")
 
   if !isnothing(rising)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_callibration,
       "rising",
       "\"$(rising)\""
@@ -357,7 +357,7 @@ function urdfwriter_urdfcallibration_create(
   end
 
   if !isnothing(falling)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_callibration,
       "falling",
       "\"$(falling)\""
@@ -370,9 +370,9 @@ end
 
 # URDFWriter: URDF Dynamics: exported functions
 
-export urdfwriter_urdfdynamics_create
+export urdfwriter_dynamics_create
 
-function urdfwriter_urdfdynamics_create(
+function urdfwriter_dynamics_create(
     damping::Optional{Union{Int64, Float64}}=nothing,
     friction::Optional{Union{Int64, Float64}}=nothing
   )::XmlNode
@@ -380,7 +380,7 @@ function urdfwriter_urdfdynamics_create(
   xml_dynamics = xmlwriter_xmlnode_create("dynamics")
 
   if !isnothing(damping)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_dynamics,
       "dynamics",
       "\"$(damping)\""
@@ -388,7 +388,7 @@ function urdfwriter_urdfdynamics_create(
   end
 
   if !isnothing(friction)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_dynamics,
       "friction",
       "\"$(friction)\""
@@ -401,9 +401,9 @@ end
 
 # URDFWriter: URDF Limit: exported functions
 
-export urdfwriter_urdflimit_create
+export urdfwriter_limit_create
 
-function urdfwriter_urdflimit_create(
+function urdfwriter_limit_create(
     velocity::Union{Int64, Float64},
     effort::Union{Int64, Float64},
     lower::Optional{Union{Int64, Float64}}=nothing,
@@ -412,20 +412,20 @@ function urdfwriter_urdflimit_create(
 
   xml_limit = xmlwriter_xmlnode_create("limit")
 
-  xmlwriter_xmlnode_add_tag!(
+  xmlwriter_xmlnode_addtag!(
     xml_limit,
     "velocity",
     "\"$(velocity)\""
   )
   
-  xmlwriter_xmlnode_add_tag!(
+  xmlwriter_xmlnode_addtag!(
     xml_limit,
     "effort",
     "\"$(effort)\""
   )
 
   if !isnothing(lower)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_limit,
       "lower",
       "\"$(lower)\""
@@ -433,7 +433,7 @@ function urdfwriter_urdflimit_create(
   end
 
   if !isnothing(upper)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_limit,
       "upper",
       "\"$(upper)\""
@@ -446,9 +446,9 @@ end
 
 # URDFWriter: URDF Mimic: exported functions
 
-export urdfwriter_urdfmimic_create
+export urdfwriter_mimic_create
 
-function urdfwriter_urdfmimic_create(
+function urdfwriter_mimic_create(
     joint::String,
     multiplier::Optional{Union{Int64, Float64}}=nothing,
     offset::Optional{Union{Int64, Float64}}=nothing,
@@ -458,14 +458,14 @@ function urdfwriter_urdfmimic_create(
 
   xml_mimic = xmlwriter_xmlnode_create("mimic")
     
-  xmlwriter_xmlnode_add_tag!(
+  xmlwriter_xmlnode_addtag!(
     xml_mimic,
     "joint",
     "\"$(joint)\""
   )
 
   if !isnothing(multiplier)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_mimic,
       "multiplier",
       "\"$(multiplier)\""
@@ -473,7 +473,7 @@ function urdfwriter_urdfmimic_create(
   end
 
   if !isnothing(offset)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_mimic,
       "offset",
       "\"$(offset)\""
@@ -486,9 +486,9 @@ end
 
 # URDFWriter: URDF Safety Controller: exported functions
 
-export urdfwriter_urdfsafetycontroller_create
+export urdfwriter_safetycontroller_create
 
-function urdfwriter_urdfsafetycontroller_create(
+function urdfwriter_safetycontroller_create(
     k_velocity::Union{Int64, Float64},
     k_position::Optional{Union{Int64, Float64}}=nothing,
     soft_lower_limit::Optional{Union{Int64, Float64}}=nothing,
@@ -499,14 +499,14 @@ function urdfwriter_urdfsafetycontroller_create(
 
   xml_safety_controller = xmlwriter_xmlnode_create("safety_controller")
 
-  xmlwriter_xmlnode_add_tag!(
+  xmlwriter_xmlnode_addtag!(
     xml_safety_controller,
     "k_velocity",
     "\"$(k_velocity)\""
   )
   
   if !isnothing(k_position)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_safety_controller,
       "k_position",
       "\"$(k_position)\""
@@ -514,7 +514,7 @@ function urdfwriter_urdfsafetycontroller_create(
   end
 
   if !isnothing(soft_lower_limit)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_safety_controller,
       "soft_lower_limit",
       "\"$(soft_lower_limit)\""
@@ -522,7 +522,7 @@ function urdfwriter_urdfsafetycontroller_create(
   end
 
   if !isnothing(soft_upper_limit)
-    xmlwriter_xmlnode_add_tag!(
+    xmlwriter_xmlnode_addtag!(
       xml_safety_controller,
       "soft_upper_limit",
       "\"$(soft_upper_limit)\""
@@ -535,7 +535,7 @@ end
 
 # URDFWriter: URDFJoint: exported functions
 
-export urdfwriter_urdfjoint_create,
+export urdfwriter_joint_create,
   URDFJointType, revolute, continuous,
   prismatic, fixed, floating, planar
 
@@ -548,7 +548,7 @@ export urdfwriter_urdfjoint_create,
   planar
 end
 
-function urdfwriter_urdfjoint_create(
+function urdfwriter_joint_create(
     name::String,
     type::URDFJointType,
     parent::String,
@@ -568,48 +568,48 @@ function urdfwriter_urdfjoint_create(
 
   joint_node::XmlNode = xmlwriter_xmlnode_create("joint")
 
-  xmlwriter_xmlnode_add_tag!(joint_node, "name", "\"$(name)\"")
-  xmlwriter_xmlnode_add_tag!(joint_node, "type", "\"$(String(Symbol(type)))\"")
+  xmlwriter_xmlnode_addtag!(joint_node, "name", "\"$(name)\"")
+  xmlwriter_xmlnode_addtag!(joint_node, "type", "\"$(String(Symbol(type)))\"")
 
-  xmlwriter_xmlnode_add_child!(
+  xmlwriter_xmlnode_addchild!(
     joint_node,
     "parent",
     Dict("link" => "\"$(parent)\"")
   )
-  xmlwriter_xmlnode_add_child!(
+  xmlwriter_xmlnode_addchild!(
     joint_node,
     "child",
     Dict("link" => "\"$(child)\"")
   )
   
   if !isnothing(origin)
-    xmlwriter_xmlnode_add_child!(joint_node, origin)
+    xmlwriter_xmlnode_addchild!(joint_node, origin)
   end
 
   if !isnothing(axis)
-    xmlwriter_xmlnode_add_child!(joint_node, axis)
+    xmlwriter_xmlnode_addchild!(joint_node, axis)
   end
 
   if !isnothing(callibration)
-    xmlwriter_xmlnode_add_child!(joint_node, callibration)
+    xmlwriter_xmlnode_addchild!(joint_node, callibration)
   end
 
   if !isnothing(dynamics)
-    xmlwriter_xmlnode_add_child!(joint_node, dynamics)
+    xmlwriter_xmlnode_addchild!(joint_node, dynamics)
   end
 
   if !isnothing(limit)
-    xmlwriter_xmlnode_add_child!(joint_node, limit)
+    xmlwriter_xmlnode_addchild!(joint_node, limit)
   end
 
   if !isnothing(mimic)
     @warn "Joint $(name) mimics another joint; $(JOINTMIMICMSG)"
-    xmlwriter_xmlnode_add_child!(joint_node, mimic)
+    xmlwriter_xmlnode_addchild!(joint_node, mimic)
   end
 
   if !isnothing(safety_controller)
     @warn "Joint $(name) uses a safety controller; $(SAFETYCONTROLLERMSG)"
-    xmlwriter_xmlnode_add_child!(joint_node, safety_controller)
+    xmlwriter_xmlnode_addchild!(joint_node, safety_controller)
   end
   
   return joint_node
@@ -619,36 +619,36 @@ end
 
 # URDFWriter: URDFFile: exported functions 
 
-export urdfwriter_urdffile_create,
-       urdfwriter_urdffile_write,
-       urdfwriter_urdffile_add_link!,
-       urdfwriter_urdffile_add_joint!
+export urdfwriter_urdf_create,
+       urdfwriter_urdf_write,
+       urdfwriter_urdf_addlink!,
+       urdfwriter_urdf_addjoint!
 
-function urdfwriter_urdffile_create(name::String="robot")::XmlNode
+function urdfwriter_urdf_create(name::String="robot")::XmlNode
 
   return xmlwriter_xmlnode_create("robot", Dict("name" => "\"$(name)\""))
 
 end
 
-function urdfwriter_urdffile_add_link!(
+function urdfwriter_urdf_addlink!(
     urdf_doc::XmlNode,
     link::XmlNode
   )
 
-  xmlwriter_xmlnode_add_child!(urdf_doc, link)
+  xmlwriter_xmlnode_addchild!(urdf_doc, link)
 
 end
 
-function urdfwriter_urdffile_add_joint!(
+function urdfwriter_urdf_addjoint!(
     urdf_doc::XmlNode,
     joint::XmlNode
   )
 
-  xmlwriter_xmlnode_add_child!(urdf_doc, joint)
+  xmlwriter_xmlnode_addchild!(urdf_doc, joint)
 
 end
 
-function urdfwriter_urdffile_write(
+function urdfwriter_urdf_write(
     file_path::String,
     urdf_doc::XmlNode
   )
