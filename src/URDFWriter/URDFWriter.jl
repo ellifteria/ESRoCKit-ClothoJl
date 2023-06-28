@@ -5,6 +5,8 @@ module URDFWriter
 include("../../deps/juliaxmlwriter/src/XMLWriter.jl")
 using .XMLWriter
 
+export XmlNode, XmlPreamble
+
 # Internal types
 
 Optional{T} = Union{T, Nothing}
