@@ -372,7 +372,7 @@ function urdfwriter_urdfdynamics_create(
     xmlwriter_xmlnode_add_tag!(
       xml_dynamics,
       "dynamics",
-      "\"$(dynamics)\""
+      "\"$(damping)\""
     )
   end
 
@@ -524,7 +524,9 @@ end
 
 # URDFWriter: URDFJoint: exported functions
 
-export urdfwriter_urdfjoint_create
+export urdfwriter_urdfjoint_create,
+  URDFJointType, revolute, continuous,
+  prismatic, fixed, floating, planar
 
 @enum URDFJointType begin
   revolute
@@ -553,7 +555,7 @@ function urdfwriter_urdfjoint_create(
     throw(ArgumentError("limit must be provided and not nothing for joint type: $(String(Symbol(type)))"))
   end
 
-  joint_node::XmlNode = xmlwriter_xmlnode_create(joint)
+  joint_node::XmlNode = xmlwriter_xmlnode_create("joint")
 
   xmlwriter_xmlnode_add_tag!(joint_node, "name", "\"$(name)\"")
   xmlwriter_xmlnode_add_tag!(joint_node, "type", "\"$(String(Symbol(type)))\"")
