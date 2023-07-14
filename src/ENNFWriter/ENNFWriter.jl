@@ -66,10 +66,33 @@ end
 
 function ennfwriter_layer_add!(
     ennf_doc::XmlNode,
-    layer::Matrix{Float64}
+    layer::Union{Matrix{Float64}, Matrix{Int64}},
+    index::Int64
 )
     @warn "Layer being added; $(LAYERMSG)"
-    @error "NOT YET IMPLEMENTED"
+
+    layer_as_string = string(layer)
+
+    start_index = findfirst("[", layer_as_string)[1] + 1;
+    finish_index = findfirst("]", layer_as_string)[1] - 1;
+
+    modified_layer_as_string = layer_as_string[start_index:finish_index]
+
+    layer_node = xmlwriter_xmlnode_create("neuron_layer")
+
+    xmlwriter_xmlnode_addtag!(
+        layer_node,
+        "index",
+        "\"$(index)"
+    )
+
+    xmlwriter_xmlnode_addtag!(
+        layer_node,
+        "layer_matrix",
+        "\"$(modified_layer_as_string)\""
+    )
+
+    xmlwriter_xmlnode_addchild!(ennf_doc, layer_node)
 end
 
 function ennfwriter_enf_create(name::String="robot")::XmlNode
