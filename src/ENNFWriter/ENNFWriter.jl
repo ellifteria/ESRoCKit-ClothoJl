@@ -8,6 +8,7 @@ using .XMLWriter
 
 const UNCHECKMSG = "SimRoKit.jl does NOT check if"
 const LINKMSG = "$(UNCHECKMSG) the provided link is a valid link name"
+const JOINTMSG = "$(UNCHECKMSG) the provided joint is a valid joint name"
 const LAYERMSG = "$(UNCHECKMSG) the provided layer is valid with respect to the sizes of the preceeding and following layers"
 
 export ennfwriter_enf_create,
@@ -43,16 +44,16 @@ end
 function ennfwriter_neuron_motor_add!(
     ennf_doc::XmlNode,
     index::Int64,
-    link::String
+    joint::String
 )
-    @warn "Motor neuron being created for a robot link; $(LINKMSG)"
+    @warn "Motor neuron being created for a robot joint; $(JOINTMSG)"
     
     motor_neuron = xmlwriter_xmlnode_create("motor")
 
     xmlwriter_xmlnode_addtag!(
         motor_neuron,
-        "link",
-        "\"$(link)\""
+        "joint",
+        "\"$(joint)\""
     )
 
     xmlwriter_xmlnode_addtag!(
