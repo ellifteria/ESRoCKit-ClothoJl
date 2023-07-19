@@ -1,14 +1,14 @@
-# SimRoKit-jl
+# ESRoCKit ClothoJl
 
 ---
 
-Simulated Robotics Tookit&mdash;julia
+Clotho&mdash;Julia Implementation&mdash;Elli's Simulated Robotic Creatures Toolkit
 
 ---
 
-SimRoKit is a simple native Julia library for creating robot XML specification files.
+The ESRoCKit Project: ClothoJl tool is a simple native Julia library for creating robot XML specification files.
 
-SimRoKit supports the following file types:
+ClothoJl supports the following file types:
 
 Simulated robot bodies:
 
@@ -19,8 +19,6 @@ Simulated robot bodies:
 Simulates robot brains:
 
 - [ ] ENNF
-  - [ ] ENNF1
-  - [ ] ENNF2
 
 <!-- ## Installation -->
 
