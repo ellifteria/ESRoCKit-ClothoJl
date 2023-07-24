@@ -2,7 +2,9 @@
 
 ---
 
-Clotho&mdash;Julia Implementation&mdash;Elli's Simulated Robotic Creatures Toolkit
+ClothoJl, an Julia ESRoCKit package for simulated robot control.
+
+Part of Elli's Simulated Robotic Creatures Toolkit
 
 ---
 
