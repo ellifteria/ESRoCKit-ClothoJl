@@ -13,7 +13,7 @@ const LAYERMSG = "$(UNCHECKMSG) the provided layer is valid with respect to the 
 
 export ennfwriter_enf_create,
     ennfwriter_ennf_write,
-    ennfwriter_layer_add!,
+    ennfwriter_network_layer_add!,
     ennfwriter_neuron_motor_add!,
     ennfwriter_neuron_sensor_add!
 
@@ -65,35 +65,49 @@ function ennfwriter_neuron_motor_add!(
     xmlwriter_xmlnode_addchild!(ennf_doc, motor_neuron)
 end
 
-function ennfwriter_layer_add!(
+function ennfwriter_network_layer_add!(
     ennf_doc::XmlNode,
-    layer::Union{Matrix{Float64}, Matrix{Int64}},
+    weight_matrix::Union{Matrix{Float64}, Matrix{Int64}},
+    bias_matrix::Union{Vector{Float64}, Vector{Int64}},
     index::Int64
 )
     @warn "Layer being added; $(LAYERMSG)"
 
-    layer_as_string = string(layer)
+    weight_matrix_as_string = string(weight_matrix)
 
-    start_index = findfirst("[", layer_as_string)[1] + 1;
-    finish_index = findfirst("]", layer_as_string)[1] - 1;
+    start_index = findfirst("[", weight_matrix_as_string)[1] + 1;
+    finish_index = findfirst("]", weight_matrix_as_string)[1] - 1;
 
-    modified_layer_as_string = layer_as_string[start_index:finish_index]
+    modified_weight_matrix_as_string = weight_matrix_as_string[start_index:finish_index]
 
-    layer_node = xmlwriter_xmlnode_create("neuron_layer")
+    bias_matrix_as_string = string(bias_matrix)
+
+    start_index = findfirst("[", bias_matrix_as_string)[1] + 1;
+    finish_index = findfirst("]", bias_matrix_as_string)[1] - 1;
+
+    modified_bias_matrix_as_string = bias_matrix_as_string[start_index:finish_index]
+
+    network_layer_node = xmlwriter_xmlnode_create("network_layer")
 
     xmlwriter_xmlnode_addtag!(
-        layer_node,
+        network_layer_node,
         "index",
-        "\"$(index)"
+        "\"$(index)\""
     )
 
     xmlwriter_xmlnode_addtag!(
-        layer_node,
-        "layer_matrix",
-        "\"$(modified_layer_as_string)\""
+        network_layer_node,
+        "weight_matrix",
+        "\"$(modified_weight_matrix_as_string)\""
     )
 
-    xmlwriter_xmlnode_addchild!(ennf_doc, layer_node)
+    xmlwriter_xmlnode_addtag!(
+        network_layer_node,
+        "bias_matrix",
+        "\"$(modified_bias_matrix_as_string)\""
+    )
+
+    xmlwriter_xmlnode_addchild!(ennf_doc, network_layer_node)
 end
 
 function ennfwriter_enf_create(name::String="robot")::XmlNode
