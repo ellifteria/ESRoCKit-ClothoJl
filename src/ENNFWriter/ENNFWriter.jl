@@ -80,6 +80,10 @@ function ennfwriter_network_layer_add!(
 
     modified_weight_matrix_as_string = weight_matrix_as_string[start_index:finish_index]
 
+    while modified_weight_matrix_as_string[end] == ';'
+        modified_weight_matrix_as_string = modified_weight_matrix_as_string[1:end-1]
+    end
+
     bias_matrix_as_string = string(bias_matrix)
 
     start_index = findfirst("[", bias_matrix_as_string)[1] + 1;
