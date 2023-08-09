@@ -6,7 +6,7 @@ using .XMLWriter
 
 # Internal warning messages
 
-const UNCHECKMSG = "SimRoKit.jl does NOT check if"
+const UNCHECKMSG = "ClothoJl does NOT check if"
 const LINKMSG = "$(UNCHECKMSG) the provided link is a valid link name"
 const JOINTMSG = "$(UNCHECKMSG) the provided joint is a valid joint name"
 const LAYERMSG = "$(UNCHECKMSG) the provided layer is valid with respect to the sizes of the preceeding and following layers"

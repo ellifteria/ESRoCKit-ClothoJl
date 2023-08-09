@@ -13,7 +13,7 @@ Optional{T} = Union{T, Nothing}
 
 # Internal warning messages
 
-const UNCHECKMSG = "SimRoKit.jl does NOT check if"
+const UNCHECKMSG = "ClothoJl does NOT check if"
 const SAFETYCONTROLLERMSG = "$(UNCHECKMSG) the provided safety controller uses valid limits"
 const JOINTMIMICMSG = "$(UNCHECKMSG) the provided mimic follows a valid joint"
 
